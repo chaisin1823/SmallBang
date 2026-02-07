@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<script>
+    function updateServiceDetails() {
+    const select = document.getElementById("serviceSelect");
+    const serviceName = select.options[select.selectedIndex].text;
+    const category = select.options[select.selectedIndex].parentNode.label;
+
+    document.getElementById("serviceInput").value = serviceName;
+    document.getElementById("categoryInput").value = category;
+
+    console.log("Service:", serviceName, "Category:", category);
+    }
+</script>
+
+<body>
+    <div class="container">
+        
+        <header>
+            <h1>SMALLBANG Dental Clinic</h1>
+            <p style="text-align: center; color: var(--dark-teal); margin-top: -20px;">Premium Oral Healthcare</p>
+        </header>
+
+        <div class="card">
+            
+            <div class="card-header">
+                <i class="fas fa-tooth"></i> 
+                <h2>Private Dental Services</h2>
+            </div>
+            
+            <p class="subtitle">Select a treatment to view estimated duration and pricing.</p>
+            
+            <form id="bookingForm" action="appointment.php" method="POST">
+            <input type="hidden" id="serviceInput" name="serviceName">
+            <input type="hidden" id="categoryInput" name="category">
+
+            <div class="form-group">
+                <label for="serviceSelect" class="input-label">Treatment Category</label>
+                <select id="serviceSelect" required onchange="updateServiceDetails()">
+                    <option value="" disabled selected>-- Choose a Service --</option>
+                    
+                    <optgroup label="General Dentistry">
+                        <option value="checkup">Comprehensive Oral Exam</option>
+                        <option value="cleaning">Scale & Polish - Deep Cleaning</option>
+                        <option value="filling">Composite (White) Filling</option>
+                        <option value="xray">Digital X-Ray Imaging</option>
+                    </optgroup>
+
+                    <optgroup label="Cosmetic & Aesthetic">
+                        <option value="whitening">Laser Teeth Whitening</option>
+                        <option value="veneers">Porcelain Veneers Consultation</option>
+                        <option value="bonding">Cosmetic Bonding</option>
+                    </optgroup>
+
+                    <optgroup label="Specialist Services">
+                        <option value="root_canal">Root Canal Therapy</option>
+                        <option value="extraction">Wisdom Tooth Extraction</option>
+                        <option value="implants">Dental Implant Consultation</option>
+                        <option value="invisalign">Invisalign Scan & Assessment</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <hr>
+
+            <div class="card-header">
+                <i class="fas fa-calendar-check"></i>
+                <h2>Book Your Visit</h2>
+            </div>
+
+                <div class="form-group">
+                    <label class="input-label">Full Name</label>
+                    <input type="text" id="pName" placeholder="Enter your full name" name="fullName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="input-label">Preferred Date</label>
+                    <input type="date" id="appDate" name="appDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Preferred Time</label>
+                    <select id="appTime" name="appTime">
+                        <option>09:00 AM</option>
+                        <option>10:00 AM</option>
+                        <option>11:00 AM</option>
+                        <option>02:00 PM</option>
+                        <option>03:00 PM</option>
+                    </select>
+                </div>
+
+                <button type="submit" id="submitBtn">Schedule Appointment</button>
+            </form>
+
+            <div id="msg"></div>
+        </div> 
+    </div> 
+</body>
+</html>

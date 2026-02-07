@@ -6,10 +6,6 @@ session_start();
   $password = $_POST['password'];
   $confirm_password = $_POST['confirm_password'];
 
-
-  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    die("Invalid email format");
-}
   if ($password !== $confirm_password) {
     die("Passwords do not match");
 }

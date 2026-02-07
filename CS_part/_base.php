@@ -1,4 +1,5 @@
 <?php 
+// 确保在访问 Session 之前已经开启
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
