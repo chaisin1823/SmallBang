@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field.type === "password") {
+                field.type = "text";
+            } else {
+                field.type = "password";
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div id="logout-alert" class="logout-alert">
+    You have been logged out successfully
+</div>
+
+    <div class="container small-container">
+        <div class="card">
+            <div class="header-section">
+                <h2>Welcome Back</h2>
+                <p>Login to your account</p>
+            </div>
+        
+            <form id="loginForm" action="login.php" method="POST">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="Enter your email address" name="email" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Enter your password" name="password" required>
+                        <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+                    </div>
+                </div>
+
+                <button type="submit">Login</button>
+            </form>
+
+            <div class="footer-links">No account? <a href="register.html">Register now</a></div>
+        </div>
+    </div>
+
+    <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("logout") === "1") {
+        const alertBox = document.getElementById("logout-alert");
+        alertBox.style.display = "block";
+
+        setTimeout(() => {
+            alertBox.style.opacity = "0";
+        }, 2000);
+
+        setTimeout(() => {
+            alertBox.style.display = "none";
+        }, 2500);
+    }
+
+    if (params.get("error") === "1") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Login Failed',
+            text: 'Invalid email or password. Please try again.',
+            confirmButtonColor: '#ff4757',
+            background: '#ffffff',
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            }
+        });
+    }
+    </script>
+
+</body>
+</html>
