@@ -1,34 +1,55 @@
 <?php
 session_start();
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-  $name = $_POST['name'];
-  $email = $_POST['email'];
-  $password = $_POST['password'];
-  $confirm_password = $_POST['confirm_password'];
+$name = $_POST['name'];
+$email = $_POST['email'];
+$password = $_POST['password'];
+$confirm_password = $_POST['confirm_password'];
 
-
-  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    die("Invalid email format");
+if (!$name || !$email || !$password || !$confirm_password) {
+    die("Missing form data");
 }
-  if ($password !== $confirm_password) {
+
+if ($password !== $confirm_password) {
     die("Passwords do not match");
 }
 
-
 // Database connection
-    $conn = new mysqli('localhost', 'root', '', 'SMALLBANG_user_details');
-    if($conn->connect_error){
-        die('Connection Failed :'. $conn->connect_error);
-        } 
-        $smtm = $conn->prepare("INSERT INTO registration (name, email, password) VALUES (?, ?, ?)");
-        
-    if (!$smtm) {
-        die("Prepare failed: " . $conn->error);
-       }
-        $smtm->bind_param("sss", $name, $email, $password);
-        
-    if($smtm->execute()) {
-    // 存入 Session 方便 dashboard 调用
+$conn = new mysqli('localhost', 'root', '', 'SMALLBANG_user_details');
+if ($conn->connect_error) {
+    die('Connection Failed :' . $conn->connect_error);
+}
+
+// Check redundant email
+$check = $conn->prepare("SELECT id FROM registration WHERE email = ?");
+if (!$check) {
+    die("Prepare failed: " . $conn->error);
+}
+
+$check->bind_param("s", $email);
+$check->execute();
+$check->store_result();
+
+if ($check->num_rows > 0) {
+    echo "<script>
+        alert('This email is already registered. Please use another email.');
+        window.location.href = 'register.html';
+    </script>";
+}
+$check->close();
+
+// Insert user
+$smtm = $conn->prepare("INSERT INTO registration (name, email, password) VALUES (?, ?, ?)");
+
+if (!$smtm) {
+    die("Prepare failed: " . $conn->error);
+}
+$smtm->bind_param("sss", $name, $email, $password);
+
+try {
+
+    $smtm->execute();
     $_SESSION['user_id'] = $conn->insert_id;
     $_SESSION['user_name'] = $name;
 
@@ -52,18 +73,22 @@ session_start();
             <a href='../CS_part/user_dashboard.php' style='display:inline-block; margin-top:15px; padding:10px 20px; background-color:#008080; color:white; text-decoration:none; border-radius:5px; font-weight: bold;'>Go to Dashboard</a>
         </div>
     </div>";
-} else {
-    if ($conn->errno == 1062) {
+} catch (mysqli_sql_exception $e)  {
+    // 1062 = duplicate entry (unique key error)
+    if ($e->getCode() == 1062) {
         echo "<script>
-                alert('Email already exists!');
-                window.location.href = 'register.html';
-              </script>";
+            alert('This email is already registered. Please use another email.');
+            window.location.href = 'register.php';
+        </script>";
         exit();
     } else {
-        echo "Registration Error: " . $stmt->error;
+        echo "<script>
+            alert('Registration failed. Please try again.');
+            window.location.href = 'register.php';
+        </script>";
+        exit();
     }
 }
 
 $smtm->close();
 $conn->close();
-?>
