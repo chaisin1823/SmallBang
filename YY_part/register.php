@@ -53,7 +53,15 @@ session_start();
         </div>
     </div>";
 } else {
-    echo "Registration Error: " . $smtm->error;
+    if ($conn->errno == 1062) {
+        echo "<script>
+                alert('Email already exists!');
+                window.location.href = 'register.html';
+              </script>";
+        exit();
+    } else {
+        echo "Registration Error: " . $stmt->error;
+    }
 }
 
 $smtm->close();

@@ -2,14 +2,13 @@
 session_start();
 require_once('../WX_part/connect.php'); 
 
-// 1. 权限检查
 if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'user') {
     header("Location: ../YY_part/login.html");
     exit();
 }
 
-// 假设你在 login 时把用户名存到了 $_SESSION['username']
-// 如果没存，可以用 $_SESSION['email'] 代替
+// login $_SESSION['username']
+//  $_SESSION['email'] 
 $displayName = isset($_SESSION['username']) ? $_SESSION['username'] : $_SESSION['email'];
 
 include '_head.php'; 
