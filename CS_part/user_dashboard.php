@@ -7,8 +7,6 @@ if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'user') {
     exit();
 }
 
-// login $_SESSION['username']
-//  $_SESSION['email'] 
 $displayName = isset($_SESSION['username']) ? $_SESSION['username'] : $_SESSION['email'];
 
 include '_head.php'; 

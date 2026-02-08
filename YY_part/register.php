@@ -50,6 +50,7 @@ $smtm->bind_param("sss", $name, $email, $password);
 try {
 
     $smtm->execute();
+    // 存入 Session 方便 dashboard 调用
     $_SESSION['user_id'] = $conn->insert_id;
     $_SESSION['user_name'] = $name;
 
