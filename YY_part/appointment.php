@@ -5,6 +5,20 @@
  $category = $_POST['category'];
  $serviceName = $_POST['serviceName'];
 
+ date_default_timezone_set('Asia/Kuala_Lumpur');
+
+ // Combine date and time for comparison
+$appointmentDateTime = strtotime($appDate . ' ' . $appTime);
+$now = time();
+
+if ($appointmentDateTime < $now) {
+    echo "<script>
+        alert('❌ You cannot book an appointment in the past. Please select a future date and time.');
+        window.history.back();
+    </script>";
+    exit();
+}
+
  //Database Connection
  $conn = new mysqli('localhost', 'root', '', 'SMALLBANG_user_details');
 
